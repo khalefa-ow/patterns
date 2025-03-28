@@ -2,17 +2,17 @@
 # Flight Routes Analysis
 Below is the semantic model for the queries used in this notebook.  The 'flights' source joins in an airports table (twice, once as orign and once as destination) and a carriers table. 
 >>>malloy
-source: flights is table('duckdb:data/flights.parquet') {
+source: flights is duckdb.table('data/flights.parquet') extend {
   measure: 
     flight_count is count()
     # percent
     percent_of_flights is flight_count/all(flight_count)
 
-  join_one: orig is table('duckdb:data/airports.parquet') on origin=orig.code
-  join_one: dest is table('duckdb:data/airports.parquet') on destination=dest.code
-  join_one: carriers is table('duckdb:data/carriers.parquet') on carrier=carriers.code
+  join_one: orig is duckdb.table('data/airports.parquet') on origin=orig.code
+  join_one: dest is duckdb.table('data/airports.parquet') on destination=dest.code
+  join_one: carriers is duckdb.table('data/carriers.parquet') on carrier=carriers.code
 
-  query: routes is {
+  view: routes is {
     group_by:
       orig.latitude
       orig.longitude
